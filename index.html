@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0b0a" />
+  <title>LUXE — Luxury Objects</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Inter"', 'Arial', 'sans-serif'],
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif']
+          },
+          colors: {
+            luxe: {
+              black: '#0b0b0a',
+              ivory: '#f6f3ed',
+              cream: '#ebe5da',
+              gold: '#b99a5b',
+              muted: '#77736b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f6f3ed;
+      --surface: #ffffff;
+      --surface-2: #ebe5da;
+      --text: #11110f;
+      --muted: #77736b;
+      --border: rgba(17,17,15,.12);
+      --gold: #b99a5b;
+      --dark: #0b0b0a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body.dark {
+      --bg: #0b0b0a;
+      --surface: #11110f;
+      --surface-2: #1b1a17;
+      --text: #f4f0e8;
+      --muted: #aaa59b;
+      --border: rgba(255,255,255,.12);
+      --gold: #c7aa6d;
+      --dark: #f4f0e8;
+    }
+
+    body.warm {
+      --bg: #eee5d7;
+      --surface: #f8f2e8;
+      --surface-2: #dfd0bc;
+      --text: #29231c;
+      --muted: #776d60;
+      --border: rgba(41,35,28,.13);
+      --gold: #a47d43;
+      --dark: #29231c;
+    }
+
+    body,
+    .surface,
+    .border-theme,
+    input,
+    textarea,
+    select {
+      transition:
+        background-color .35s ease,
+        color .35s ease,
+        border-color .35s ease;
+    }
+
+    .surface {
+      background: var(--surface);
+    }
+
+    .theme-bg {
+      background: var(--bg);
+    }
+
+    .text-theme {
+      color: var(--text);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .border-theme {
+      border-color: var(--border);
+    }
+
+    .gold {
+      color: var(--gold);
+    }
+
+    .display {
+      font-family: "Cormorant Garamond", Georgia, serif;
+    }
+
+    .nav-glass {
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .hero-image {
+      animation: heroZoom 16s ease-in-out infinite alternate;
+      transform-origin: center;
+    }
+
+    @keyframes heroZoom {
+      from { transform: scale(1); }
+      to { transform: scale(1.075); }
+    }
+
+    .marquee {
+      display: flex;
+      width: max-content;
+      animation: marquee 28s linear infinite;
+    }
+
+    @keyframes marquee {
+      to { transform: translateX(-50%); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .9s cubic-bezier(.2,.7,.2,1),
+                  transform .9s cubic-bezier(.2,.7,.2,1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .horizontal-rail {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      cursor: grab;
+    }
+
+    .horizontal-rail::-webkit-scrollbar {
+      display: none;
+    }
+
+    .horizontal-rail.dragging {
+      cursor: grabbing;
+      scroll-behavior: auto;
+    }
+
+    .rail-item {
+      scroll-snap-align: start;
+      flex: 0 0 auto;
+    }
+
+    .product-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card-image {
+      transition: transform .8s cubic-bezier(.2,.7,.2,1);
+    }
+
+    .product-card:hover .product-card-image {
+      transform: scale(1.045);
+    }
+
+    .product-second {
+      opacity: 0;
+      transition: opacity .5s ease;
+    }
+
+    .product-card:hover .product-second {
+      opacity: 1;
+    }
+
+    .product-card:hover .product-first {
+      opacity: 0;
+    }
+
+    .product-first {
+      transition: opacity .5s ease;
+    }
+
+    .luxury-button {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .luxury-button::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--text);
+      transform: translateX(105%);
+      transition: transform .45s cubic-bezier(.2,.7,.2,1);
+      z-index: -1;
+    }
+
+    .luxury-button:hover::after {
+      transform: translateX(0);
+    }
+
+    .luxury-button:hover {
+      color: var(--bg);
+    }
+
+    .gold-line {
+      height: 1px;
+      background: var(--gold);
+      width: 48px;
+    }
+
+    .modal-backdrop {
+      background: rgba(0,0,0,.62);
+      backdrop-filter: blur(8px);
+    }
+
+    .drawer {
+      transform: translateX(105%);
+      transition: transform .5s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .drawer.open {
+      transform: translateX(0);
+    }
+
+    [dir="rtl"] .drawer {
+      transform: translateX(-105%);
+    }
+
+    [dir="rtl"] .drawer.open {
+      transform: translateX(0);
+    }
+
+    .admin-drawer {
+      transform: translateX(105%);
+      transition: transform .45s ease;
+    }
+
+    [dir="rtl"] .admin-drawer {
+      transform: translateX(-105%);
+    }
+
+    [dir="rtl"] .admin-drawer.open {
+      transform: translateX(0);
+    }
+
+    .search-overlay {
+      opacity: 0;
+      visibility: hidden;
+      transition: all .35s ease;
+    }
+
+    .search-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .search-panel {
+      transform: translateY(-30px);
+      transition: transform .4s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .search-overlay.open .search-panel {
+      transform: translateY(0);
+    }
+
+    .intro {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #0b0b0a;
+      color: #f6f3ed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity .9s ease, visibility .9s ease;
+    }
+
+    .intro.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .intro-word {
+      animation: introReveal 1.2s cubic-bezier(.2,.7,.2,1) forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes introReveal {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .no-scroll {
+      overflow: hidden;
+    }
+
+    .admin-input,
+    .checkout-input {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 13px 14px;
+      outline: none;
+      color: var(--text);
+    }
+
+    .admin-input:focus,
+    .checkout-input:focus {
+      border-color: var(--gold);
+    }
+
+    .admin-tab.active {
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .toast {
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: .35s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .thin-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold) transparent;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: clamp(4rem, 19vw, 7rem);
+        line-height: .75;
+      }
+
+      .product-card:hover .product-card-image {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="theme-bg text-theme">
+
+  <!-- INTRO -->
+  <div id="intro" class="intro">
+    <div class="text-center">
+      <div class="intro-word display text-7xl md:text-9xl tracking-[.18em]">LUXE</div>
+      <div class="mt-5 text-[9px] tracking-[.5em] uppercase opacity-60">
+        Private Collection
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header id="siteHeader"
+    class="fixed top-0 left-0 right-0 z-50 nav-glass border-b border-theme">
+    <div class="max-w-[1600px] mx-auto px-5 md:px-10">
+      <div class="h-[76px] flex items-center justify-between gap-6">
+
+        <button onclick="toggleMobileMenu()"
+          class="lg:hidden w-10 h-10 flex items-center justify-center"
+          aria-label="Menu">
+          <span class="text-xl">☰</span>
+        </button>
+
+        <a href="#home" onclick="closeMobileMenu()"
+          id="brandName"
+          class="display text-4xl tracking-[.14em]">
+          LUXE
+        </a>
+
+        <nav id="desktopNav" class="hidden lg:flex items-center gap-8 text-[10px] uppercase tracking-[.22em]">
+          <a href="#collections" class="hover:opacity-50 transition">Collections</a>
+          <a href="#featured" class="hover:opacity-50 transition">Selected</a>
+          <a href="#editorial" class="hover:opacity-50 transition">Editorial</a>
+          <a href="#new" class="hover:opacity-50 transition">New Season</a>
+          <a href="#offers" class="hover:opacity-50 transition">Offers</a>
+        </nav>
+
+        <div class="flex items-center gap-2 md:gap-4">
+          <button onclick="openSearch()" class="w-10 h-10 flex items-center justify-center hover:opacity-50" aria-label="Search">
+            ⌕
+          </button>
+
+          <button onclick="openAdminLogin()" class="hidden md:flex w-10 h-10 items-center justify-center hover:opacity-50" aria-label="Admin">
+            ♢
+          </button>
+
+          <button onclick="openCart()" class="relative w-10 h-10 flex items-center justify-center hover:opacity-50" aria-label="Cart">
+            🛍
+            <span id="cartCount"
+              class="absolute top-0 right-0 min-w-[17px] h-[17px] rounded-full bg-black text-white dark:bg-white dark:text-black text-[9px] flex items-center justify-center">
+              0
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobileMenu" class="hidden lg:hidden border-t border-theme py-7">
+        <nav class="flex flex-col gap-5 text-xs uppercase tracking-[.22em]">
+          <a href="#collections" onclick="closeMobileMenu()">Collections</a>
+          <a href="#featured" onclick="closeMobileMenu()">Selected</a>
+          <a href="#editorial" onclick="closeMobileMenu()">Editorial</a>
+          <a href="#new" onclick="closeMobileMenu()">New Season</a>
+          <a href="#offers" onclick="closeMobileMenu()">Offers</a>
+          <button onclick="openAdminLogin(); closeMobileMenu()" class="text-right">
+            Admin
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="home">
+
+    <!-- HERO -->
+    <section class="relative min-h-[92vh] md:min-h-screen overflow-hidden flex items-end">
+      <img
+        id="heroImage"
+        class="hero-image absolute inset-0 w-full h-full object-cover"
+        src=""
+        alt="LUXE Collection"
+      />
+      <div class="absolute inset-0 bg-black/30"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20"></div>
+
+      <div class="relative z-10 w-full max-w-[1600px] mx-auto px-5 md:px-10 pb-20 md:pb-28 text-white">
+        <div class="max-w-4xl reveal">
+          <div class="flex items-center gap-4 mb-7">
+            <span class="gold-line"></span>
+            <span id="heroEyebrow" class="text-[9px] uppercase tracking-[.4em] text-white/80">
+              Private Collection / 2026
+            </span>
+          </div>
+
+          <h1 id="heroTitle"
+            class="display hero-title text-[6.5rem] md:text-[11rem] leading-[.72] tracking-[-.035em] font-light">
+            The New<br>Objects
+          </h1>
+
+          <p id="heroText"
+            class="mt-8 max-w-xl text-sm md:text-base leading-7 text-white/80">
+            A considered collection of objects, crafted for those who notice the details.
+          </p>
+
+          <div class="flex flex-wrap gap-3 mt-9">
+            <a href="#featured"
+              class="luxury-button border border-white/60 px-7 py-4 text-[10px] uppercase tracking-[.25em]">
+              Shop Now
+            </a>
+
+            <a href="#editorial"
+              class="px-7 py-4 text-[10px] uppercase tracking-[.25em] border border-white/20 bg-white/10 backdrop-blur-sm hover:bg-white hover:text-black transition">
+              Discover
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <section class="border-b border-theme overflow-hidden py-5">
+      <div class="marquee">
+        <div class="flex items-center gap-10 px-5 whitespace-nowrap text-[9px] uppercase tracking-[.42em]">
+          <span>New Collection</span><span>✦</span>
+          <span>Luxury Essentials</span><span>✦</span>
+          <span>Curated For You</span><span>✦</span>
+          <span>WhatsApp Orders</span><span>✦</span>
+          <span>New Arrivals</span><span>✦</span>
+          <span>Private Selection</span><span>✦</span>
+        </div>
+
+        <div class="flex items-center gap-10 px-5 whitespace-nowrap text-[9px] uppercase tracking-[.42em]">
+          <span>New Collection</span><span>✦</span>
+          <span>Luxury Essentials</span><span>✦</span>
+          <span>Curated For You</span><span>✦</span>
+          <span>WhatsApp Orders</span><span>✦</span>
+          <span>New Arrivals</span><span>✦</span>
+          <span>Private Selection</span><span>✦</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLLECTIONS -->
+    <section id="collections" class="max-w-[1600px] mx-auto px-5 md:px-10 py-24 md:py-36">
+      <div class="flex items-end justify-between mb-12 reveal">
+        <div>
+          <div class="text-[9px] uppercase tracking-[.4em] muted mb-4">01 / Collections</div>
+          <h2 class="display text-5xl md:text-7xl font-light">Objects of Desire</h2>
+        </div>
+        <div class="hidden md:block max-w-xs text-xs leading-6 muted">
+          Carefully selected categories, each with its own character.
+        </div>
+      </div>
+
+      <div id="categoriesRail"
+        class="horizontal-rail gap-3 md:gap-5 pb-4 reveal">
+      </div>
+    </section>
+
+    <!-- SELECTED PRODUCTS -->
+    <section id="featured" class="surface py-24 md:py-32">
+      <div class="max-w-[1600px] mx-auto px-5 md:px-10">
+        <div class="flex items-end justify-between mb-12 reveal">
+          <div>
+            <div class="text-[9px] uppercase tracking-[.4em] muted mb-4">02 / Selected</div>
+            <h2 class="display text-5xl md:text-7xl font-light">The Selection</h2>
+          </div>
+
+          <button onclick="openSearch()"
+            class="hidden md:block text-[9px] uppercase tracking-[.3em] border-b border-current pb-2">
+            Explore all
+          </button>
+        </div>
+
+        <div id="featuredGrid"
+          class="grid grid-cols-2 lg:grid-cols-4 gap-x-3 md:gap-x-5 gap-y-12 reveal">
+        </div>
+      </div>
+    </section>
+
+    <!-- EDITORIAL -->
+    <section id="editorial" class="max-w-[1600px] mx-auto px-5 md:px-10 py-24 md:py-40">
+      <div class="grid lg:grid-cols-12 gap-5 items-center">
+
+        <div class="lg:col-span-7 relative reveal">
+          <div class="aspect-[4/5] md:aspect-[5/4] overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=1500&q=85"
+              class="w-full h-full object-cover hover:scale-[1.025] transition duration-[1.4s]"
+              alt="Editorial"
+              loading="lazy"
+            />
+          </div>
+
+          <div class="absolute bottom-5 right-5 bg-white/90 text-black px-5 py-4 backdrop-blur-md">
+            <div class="text-[8px] uppercase tracking-[.35em]">LUXE / EDITORIAL</div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 lg:pr-16 reveal">
+          <div class="text-[9px] uppercase tracking-[.4em] muted mb-6">Editorial / 01</div>
+
+          <h2 class="display text-6xl md:text-8xl leading-[.82] font-light">
+            The<br>Objects
+          </h2>
+
+          <div class="gold-line my-8"></div>
+
+          <p class="text-sm leading-7 muted max-w-md">
+            Luxury is rarely loud. It lives in proportion, texture,
+            weight and the small details that reveal themselves over time.
+          </p>
+
+          <a href="#new"
+            class="inline-block mt-9 text-[9px] uppercase tracking-[.3em] border-b border-current pb-2">
+            Explore the story
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW SEASON -->
+    <section id="new" class="surface py-24 md:py-32">
+      <div class="max-w-[1600px] mx-auto px-5 md:px-10">
+        <div class="grid md:grid-cols-12 gap-8 items-end mb-14 reveal">
+          <div class="md:col-span-7">
+            <div class="text-[9px] uppercase tracking-[.4em] muted mb-4">03 / New Season</div>
+            <h2 class="display text-6xl md:text-8xl font-light leading-[.8]">
+              The New<br>Season
+            </h2>
+          </div>
+          <p class="md:col-span-4 text-xs leading-7 muted">
+            A refined edit of newly arrived pieces designed to move effortlessly
+            from day to evening.
+          </p>
+        </div>
+
+        <div id="newRail"
+          class="horizontal-rail gap-4 pb-4 reveal">
+        </div>
+      </div>
+    </section>
+
+    <!-- BIG IMAGE -->
+    <section class="relative h-[72vh] md:h-[90vh] overflow-hidden">
+      <img
+        src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=2200&q=90"
+        class="absolute inset-0 w-full h-full object-cover hover:scale-[1.035] transition duration-[1.8s]"
+        alt="Luxury Fashion"
+        loading="lazy"
+      />
+      <div class="absolute inset-0 bg-black/25"></div>
+
+      <div class="relative z-10 h-full max-w-[1600px] mx-auto px-5 md:px-10 flex items-center">
+        <div class="text-white max-w-xl reveal">
+          <div class="text-[9px] uppercase tracking-[.45em] text-white/70 mb-7">
+            A point of view
+          </div>
+
+          <h2 class="display text-7xl md:text-[10rem] leading-[.75]">
+            Less.<br>Better.
+          </h2>
+
+          <p class="mt-8 text-sm text-white/75 leading-7 max-w-sm">
+            Objects chosen for their ability to become part of your everyday ritual.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- OFFERS -->
+    <section id="offers" class="max-w-[1600px] mx-auto px-5 md:px-10 py-24 md:py-36">
+      <div class="grid md:grid-cols-12 gap-8 items-end mb-12 reveal">
+        <div class="md:col-span-8">
+          <div class="text-[9px] uppercase tracking-[.4em] muted mb-4">04 / Private Offers</div>
+          <h2 class="display text-6xl md:text-8xl font-light">Rare Finds</h2>
+        </div>
+        <p class="md:col-span-4 text-xs leading-7 muted">
+          Selected pieces, special pricing, limited quantities.
+        </p>
+      </div>
+
+      <div id="offersGrid"
+        class="grid grid-cols-2 lg:grid-cols-4 gap-x-3 md:gap-x-5 gap-y-12 reveal">
+      </div>
+    </section>
+
+    <!-- EDITORIAL 2 -->
+    <section class="surface">
+      <div class="max-w-[1600px] mx-auto grid md:grid-cols-2">
+        <div class="p-8 md:p-16 lg:p-24 flex flex-col justify-center">
+          <div class="text-[9px] uppercase tracking-[.4em] muted mb-6">
+            Editorial / 02
+          </div>
+
+          <h2 class="display text-6xl md:text-8xl leading-[.78]">
+            Details<br>Matter.
+          </h2>
+
+          <div class="gold-line my-8"></div>
+
+          <p class="text-sm leading-7 muted max-w-md">
+            From the gleam of a metal edge to the texture of fine leather,
+            every object in LUXE is selected with intention.
+          </p>
+        </div>
+
+        <div class="min-h-[600px] overflow-hidden">
+          <img
+       
