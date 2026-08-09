@@ -1,706 +1,271 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0b0b0a" />
-  <title>LUXE — Luxury Objects</title>
-
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Inter"', 'Arial', 'sans-serif'],
-            display: ['"Cormorant Garamond"', 'Georgia', 'serif']
-          },
-          colors: {
-            luxe: {
-              black: '#0b0b0a',
-              ivory: '#f6f3ed',
-              cream: '#ebe5da',
-              gold: '#b99a5b',
-              muted: '#77736b'
-            }
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUXE</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <style>
-    :root {
-      --bg: #f6f3ed;
-      --surface: #ffffff;
-      --surface-2: #ebe5da;
-      --text: #11110f;
-      --muted: #77736b;
-      --border: rgba(17,17,15,.12);
-      --gold: #b99a5b;
-      --dark: #0b0b0a;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "Inter", Arial, sans-serif;
-      overflow-x: hidden;
-    }
-
-    body.dark {
-      --bg: #0b0b0a;
-      --surface: #11110f;
-      --surface-2: #1b1a17;
-      --text: #f4f0e8;
-      --muted: #aaa59b;
-      --border: rgba(255,255,255,.12);
-      --gold: #c7aa6d;
-      --dark: #f4f0e8;
-    }
-
-    body.warm {
-      --bg: #eee5d7;
-      --surface: #f8f2e8;
-      --surface-2: #dfd0bc;
-      --text: #29231c;
-      --muted: #776d60;
-      --border: rgba(41,35,28,.13);
-      --gold: #a47d43;
-      --dark: #29231c;
-    }
-
-    body,
-    .surface,
-    .border-theme,
-    input,
-    textarea,
-    select {
-      transition:
-        background-color .35s ease,
-        color .35s ease,
-        border-color .35s ease;
-    }
-
-    .surface {
-      background: var(--surface);
-    }
-
-    .theme-bg {
-      background: var(--bg);
-    }
-
-    .text-theme {
-      color: var(--text);
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    .border-theme {
-      border-color: var(--border);
-    }
-
-    .gold {
-      color: var(--gold);
-    }
-
-    .display {
-      font-family: "Cormorant Garamond", Georgia, serif;
-    }
-
-    .nav-glass {
-      background: color-mix(in srgb, var(--bg) 88%, transparent);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-
-    .hero-image {
-      animation: heroZoom 16s ease-in-out infinite alternate;
-      transform-origin: center;
-    }
-
-    @keyframes heroZoom {
-      from { transform: scale(1); }
-      to { transform: scale(1.075); }
-    }
-
-    .marquee {
-      display: flex;
-      width: max-content;
-      animation: marquee 28s linear infinite;
-    }
-
-    @keyframes marquee {
-      to { transform: translateX(-50%); }
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity .9s cubic-bezier(.2,.7,.2,1),
-                  transform .9s cubic-bezier(.2,.7,.2,1);
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .horizontal-rail {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-      cursor: grab;
-    }
-
-    .horizontal-rail::-webkit-scrollbar {
-      display: none;
-    }
-
-    .horizontal-rail.dragging {
-      cursor: grabbing;
-      scroll-behavior: auto;
-    }
-
-    .rail-item {
-      scroll-snap-align: start;
-      flex: 0 0 auto;
-    }
-
-    .product-card {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .product-card-image {
-      transition: transform .8s cubic-bezier(.2,.7,.2,1);
-    }
-
-    .product-card:hover .product-card-image {
-      transform: scale(1.045);
-    }
-
-    .product-second {
-      opacity: 0;
-      transition: opacity .5s ease;
-    }
-
-    .product-card:hover .product-second {
-      opacity: 1;
-    }
-
-    .product-card:hover .product-first {
-      opacity: 0;
-    }
-
-    .product-first {
-      transition: opacity .5s ease;
-    }
-
-    .luxury-button {
-      position: relative;
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    .luxury-button::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: var(--text);
-      transform: translateX(105%);
-      transition: transform .45s cubic-bezier(.2,.7,.2,1);
-      z-index: -1;
-    }
-
-    .luxury-button:hover::after {
-      transform: translateX(0);
-    }
-
-    .luxury-button:hover {
-      color: var(--bg);
-    }
-
-    .gold-line {
-      height: 1px;
-      background: var(--gold);
-      width: 48px;
-    }
-
-    .modal-backdrop {
-      background: rgba(0,0,0,.62);
-      backdrop-filter: blur(8px);
-    }
-
-    .drawer {
-      transform: translateX(105%);
-      transition: transform .5s cubic-bezier(.2,.8,.2,1);
-    }
-
-    .drawer.open {
-      transform: translateX(0);
-    }
-
-    [dir="rtl"] .drawer {
-      transform: translateX(-105%);
-    }
-
-    [dir="rtl"] .drawer.open {
-      transform: translateX(0);
-    }
-
-    .admin-drawer {
-      transform: translateX(105%);
-      transition: transform .45s ease;
-    }
-
-    [dir="rtl"] .admin-drawer {
-      transform: translateX(-105%);
-    }
-
-    [dir="rtl"] .admin-drawer.open {
-      transform: translateX(0);
-    }
-
-    .search-overlay {
-      opacity: 0;
-      visibility: hidden;
-      transition: all .35s ease;
-    }
-
-    .search-overlay.open {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .search-panel {
-      transform: translateY(-30px);
-      transition: transform .4s cubic-bezier(.2,.8,.2,1);
-    }
-
-    .search-overlay.open .search-panel {
-      transform: translateY(0);
-    }
-
-    .intro {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: #0b0b0a;
-      color: #f6f3ed;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity .9s ease, visibility .9s ease;
-    }
-
-    .intro.hide {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    .intro-word {
-      animation: introReveal 1.2s cubic-bezier(.2,.7,.2,1) forwards;
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    @keyframes introReveal {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .no-scroll {
-      overflow: hidden;
-    }
-
-    .admin-input,
-    .checkout-input {
-      width: 100%;
-      background: transparent;
-      border: 1px solid var(--border);
-      padding: 13px 14px;
-      outline: none;
-      color: var(--text);
-    }
-
-    .admin-input:focus,
-    .checkout-input:focus {
-      border-color: var(--gold);
-    }
-
-    .admin-tab.active {
-      color: var(--gold);
-      border-color: var(--gold);
-    }
-
-    .toast {
-      transform: translateY(20px);
-      opacity: 0;
-      pointer-events: none;
-      transition: .35s ease;
-    }
-
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .line-clamp-2 {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .thin-scroll {
-      scrollbar-width: thin;
-      scrollbar-color: var(--gold) transparent;
-    }
-
-    @media (max-width: 768px) {
-      .hero-title {
-        font-size: clamp(4rem, 19vw, 7rem);
-        line-height: .75;
-      }
-
-      .product-card:hover .product-card-image {
-        transform: none;
-      }
-    }
+    :root{--bg-primary:#080808;--bg-secondary:#0F0F0F;--bg-tertiary:#141414;--accent:#C9A84C;--accent-light:#E0C872;--text-primary:#F7F3EC;--text-secondary:#B5AA9A;--text-muted:#5E564B;--border:rgba(201,168,76,0.12)}
+    [data-theme="light"]{--bg-primary:#FAFAF8;--bg-secondary:#F0EDE8;--bg-tertiary:#E8E4DF;--text-primary:#1A1A1A;--text-secondary:#4A4540;--text-muted:#8A8078;--border:rgba(201,168,76,0.2)}
+    [data-theme="sepia"]{--bg-primary:#1C1810;--bg-secondary:#241F15;--bg-tertiary:#2A2418;--text-primary:#E8DCC8;--text-secondary:#B8A88A;--text-muted:#6A5D4A;--border:rgba(201,168,76,0.15)}
+    *{box-sizing:border-box}
+    body{font-family:'Libre Franklin',sans-serif;font-weight:300;background:var(--bg-primary);color:var(--text-primary);transition:background 0.6s,color 0.6s}
+    .font-display{font-family:'Playfair Display',serif}
+    .hide-scrollbar::-webkit-scrollbar{display:none}.hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+    @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .marquee-track{animation:marquee 30s linear infinite}
+    @keyframes float-up{0%{transform:translateY(0) scale(1);opacity:0.6}100%{transform:translateY(-60px) scale(0.4);opacity:0}}
+    .sr{opacity:0;transform:translateY(80px);transition:opacity 1.2s cubic-bezier(0.25,1,0.5,1),transform 1.2s cubic-bezier(0.25,1,0.5,1)}
+    .sr.vis{opacity:1;transform:translateY(0)}
+    @keyframes hero-in{from{opacity:0;transform:translateY(60px)}to{opacity:1;transform:translateY(0)}}
+    .hero-stagger{opacity:0;animation:hero-in 1.4s cubic-bezier(0.25,1,0.5,1) forwards}
+    .nav-solid{background:var(--bg-primary);border-bottom:1px solid var(--border)}
+    .img-zoom{transition:transform 5s cubic-bezier(0.25,1,0.5,1)}.img-zoom:hover{transform:scale(1.05)}
+    .product-card{transition:transform 0.5s cubic-bezier(0.25,1,0.5,1)}.product-card:hover{transform:translateY(-4px)}
+    .product-card:hover .p-actions{opacity:1;transform:translateY(0)}
+    .p-actions{opacity:0;transform:translateY(8px);transition:all 0.4s cubic-bezier(0.25,1,0.5,1)}
+    @media(max-width:768px){.p-actions{opacity:1;transform:translateY(0)}}
+    .product-img-wrap{border:1px solid var(--border);transition:box-shadow 0.4s}
+    .product-card:hover .product-img-wrap{box-shadow:0 0 40px rgba(201,168,76,0.06)}
+    .gold-border{border:1px solid var(--border);transition:border-color 0.3s}.gold-border:hover,.gold-border:focus{border-color:rgba(201,168,76,0.5)}
+    .drawer-overlay{transition:opacity 0.4s}.drawer-panel{transition:transform 0.5s cubic-bezier(0.25,1,0.5,1)}
+    .section-div{height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.2}
+    .gold-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .gold-particle{position:absolute;width:2px;height:2px;background:var(--accent);border-radius:50%;animation:float-up 3s ease-in infinite;opacity:0}
+    .notif-bar{transition:transform 0.4s,opacity 0.4s}.notif-bar.hidden-bar{transform:translateY(-100%);opacity:0;pointer-events:none}
+    .admin-overlay{position:fixed;inset:0;z-index:9999;background:var(--bg-primary);overflow-y:auto;display:none}
+    .admin-overlay.open{display:block}
+    .admin-input{background:transparent;border:1px solid var(--border);color:var(--text-primary);padding:10px 14px;font-size:13px;width:100%;outline:none;border-radius:4px}
+    .admin-input:focus{border-color:var(--accent)}
+    .admin-btn{background:var(--accent);color:#080808;padding:10px 18px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;cursor:pointer;border:none;border-radius:4px}
+    .admin-btn-danger{background:#dc2626;color:#fff}
+    .admin-btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-primary)}
+    .admin-tab{padding:10px 18px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;color:var(--text-secondary);white-space:nowrap}
+    .admin-tab.active{color:var(--accent);border-color:var(--accent)}
+    .admin-table{width:100%;border-collapse:collapse;font-size:12px}
+    .admin-table th,.admin-table td{padding:8px 10px;text-align:start;border-bottom:1px solid var(--border)}
+    .admin-table th{color:var(--accent);font-weight:600;font-size:10px;letter-spacing:0.1em;text-transform:uppercase}
+    @media(prefers-reduced-motion:reduce){.sr{opacity:1;transform:none;transition:none}.hero-stagger{opacity:1;animation:none}.marquee-track{animation:none}.img-zoom{transition:none}.img-zoom:hover{transform:none}.gold-particle{display:none}}
   </style>
-</head>
+ </head>
+ <body class="w-full min-h-screen">
 
-<body class="theme-bg text-theme">
-
-  <!-- INTRO -->
-  <div id="intro" class="intro">
-    <div class="text-center">
-      <div class="intro-word display text-7xl md:text-9xl tracking-[.18em]">LUXE</div>
-      <div class="mt-5 text-[9px] tracking-[.5em] uppercase opacity-60">
-        Private Collection
-      </div>
-    </div>
+  <!-- NOTIFICATION BAR -->
+  <div id="notif-bar" class="notif-bar w-full py-2 px-4 text-center relative z-[60]" style="background:var(--accent);">
+   <p id="notif-text" class="text-[10px] tracking-[0.3em] uppercase font-medium" style="color:#080808;"></p>
+   <button id="notif-close" class="absolute end-4 top-1/2 -translate-y-1/2" aria-label="Close notification"><i data-lucide="x" class="w-3.5 h-3.5" style="color:#080808;"></i></button>
   </div>
 
-  <!-- HEADER -->
-  <header id="siteHeader"
-    class="fixed top-0 left-0 right-0 z-50 nav-glass border-b border-theme">
-    <div class="max-w-[1600px] mx-auto px-5 md:px-10">
-      <div class="h-[76px] flex items-center justify-between gap-6">
-
-        <button onclick="toggleMobileMenu()"
-          class="lg:hidden w-10 h-10 flex items-center justify-center"
-          aria-label="Menu">
-          <span class="text-xl">☰</span>
-        </button>
-
-        <a href="#home" onclick="closeMobileMenu()"
-          id="brandName"
-          class="display text-4xl tracking-[.14em]">
-          LUXE
-        </a>
-
-        <nav id="desktopNav" class="hidden lg:flex items-center gap-8 text-[10px] uppercase tracking-[.22em]">
-          <a href="#collections" class="hover:opacity-50 transition">Collections</a>
-          <a href="#featured" class="hover:opacity-50 transition">Selected</a>
-          <a href="#editorial" class="hover:opacity-50 transition">Editorial</a>
-          <a href="#new" class="hover:opacity-50 transition">New Season</a>
-          <a href="#offers" class="hover:opacity-50 transition">Offers</a>
-        </nav>
-
-        <div class="flex items-center gap-2 md:gap-4">
-          <button onclick="openSearch()" class="w-10 h-10 flex items-center justify-center hover:opacity-50" aria-label="Search">
-            ⌕
-          </button>
-
-          <button onclick="openAdminLogin()" class="hidden md:flex w-10 h-10 items-center justify-center hover:opacity-50" aria-label="Admin">
-            ♢
-          </button>
-
-          <button onclick="openCart()" class="relative w-10 h-10 flex items-center justify-center hover:opacity-50" aria-label="Cart">
-            🛍
-            <span id="cartCount"
-              class="absolute top-0 right-0 min-w-[17px] h-[17px] rounded-full bg-black text-white dark:bg-white dark:text-black text-[9px] flex items-center justify-center">
-              0
-            </span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Mobile menu -->
-      <div id="mobileMenu" class="hidden lg:hidden border-t border-theme py-7">
-        <nav class="flex flex-col gap-5 text-xs uppercase tracking-[.22em]">
-          <a href="#collections" onclick="closeMobileMenu()">Collections</a>
-          <a href="#featured" onclick="closeMobileMenu()">Selected</a>
-          <a href="#editorial" onclick="closeMobileMenu()">Editorial</a>
-          <a href="#new" onclick="closeMobileMenu()">New Season</a>
-          <a href="#offers" onclick="closeMobileMenu()">Offers</a>
-          <button onclick="openAdminLogin(); closeMobileMenu()" class="text-right">
-            Admin
-          </button>
-        </nav>
-      </div>
+  <!-- NAV -->
+  <nav id="main-nav" class="fixed top-0 inset-x-0 z-50 transition-all duration-500" style="top:32px;">
+   <div class="max-w-[1440px] mx-auto px-4 md:px-10">
+    <div class="flex items-center justify-between py-5 md:py-6">
+     <div class="flex items-center gap-3">
+      <button id="theme-btn" class="p-1.5" aria-label="Theme"><i data-lucide="moon" class="w-5 h-5" style="color:var(--text-primary);"></i></button>
+      <button id="cart-btn" aria-label="Cart" class="relative p-1.5"><i data-lucide="shopping-bag" class="w-5 h-5" style="color:var(--text-primary);"></i><span id="cart-count" class="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center hidden" style="background:var(--accent);color:#080808;"></span></button>
+      <button id="fav-btn" aria-label="Favorites" class="relative p-1.5"><i data-lucide="heart" class="w-5 h-5" style="color:var(--text-primary);"></i><span id="fav-count" class="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center hidden" style="background:var(--accent);color:#080808;"></span></button>
+      <button id="search-btn" class="p-1.5" aria-label="Search"><i data-lucide="search" class="w-5 h-5" style="color:var(--text-primary);"></i></button>
+     </div>
+     <a href="#" id="nav-brand" class="font-display text-2xl md:text-3xl tracking-[0.5em] uppercase">LUXE</a>
+     <div class="flex items-center gap-3">
+      <button id="lang-btn" class="text-[9px] tracking-[0.2em] uppercase px-2 py-1 gold-border" style="color:var(--accent);">EN</button>
+      <button id="mobile-menu-btn" class="md:hidden p-2.5" aria-label="Menu"><i data-lucide="menu" class="w-6 h-6" style="color:var(--text-primary);"></i></button>
+     </div>
     </div>
-  </header>
+    <div id="cat-nav" class="hidden md:flex items-center justify-center gap-10 pb-4 pt-2 border-t" style="border-color:var(--border);"></div>
+   </div>
+  </nav>
 
-  <main id="home">
+  <!-- MOBILE MENU DRAWER -->
+  <div id="mobile-menu-drawer" class="fixed inset-0 z-[110] pointer-events-none hidden">
+   <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/70 opacity-0 drawer-overlay pointer-events-auto"></div>
+   <div id="mobile-menu-panel" class="absolute top-0 start-0 h-full w-full max-w-xs pointer-events-auto drawer-panel flex flex-col p-6" style="background:var(--bg-primary);transform:translateX(-100%);border-inline-end:1px solid var(--border);">
+    <div class="flex items-center justify-between pb-6 mb-6 border-b" style="border-color:var(--border);">
+     <span class="font-display text-lg tracking-[0.3em] uppercase" id="mobile-menu-brand">LUXE</span>
+     <button id="mobile-menu-close" aria-label="Close"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <div id="mobile-menu-links" class="flex flex-col gap-6 text-sm tracking-widest uppercase"></div>
+    <div class="mt-auto pt-6 border-t" style="border-color:var(--border);">
+     <button onclick="openAdminPanel(); toggleMobileMenu();" class="w-full py-3 text-[10px] tracking-[0.2em] uppercase gold-border font-medium">لوحة التحكم / Admin</button>
+    </div>
+   </div>
+  </div>
 
-    <!-- HERO -->
-    <section class="relative min-h-[92vh] md:min-h-screen overflow-hidden flex items-end">
-      <img
-        id="heroImage"
-        class="hero-image absolute inset-0 w-full h-full object-cover"
-        src=""
-        alt="LUXE Collection"
-      />
-      <div class="absolute inset-0 bg-black/30"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20"></div>
+  <!-- HERO -->
+  <section class="relative w-full overflow-hidden" style="height:calc(100 * min(var(--vh,1vh),1vh));">
+   <div class="absolute inset-0"><img id="hero-img" class="w-full h-[120%] object-cover" src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1600" alt="Hero"></div>
+   <div class="absolute inset-0" style="background:linear-gradient(to top, var(--bg-primary) 0%, rgba(8,8,8,0.3) 40%, rgba(8,8,8,0.5) 100%);"></div>
+   <div class="relative z-10 flex flex-col justify-end h-full pb-24 md:pb-36 px-6 md:px-16 max-w-[1440px] mx-auto">
+    <p id="hero-eyebrow" class="hero-stagger text-[9px] tracking-[0.6em] uppercase mb-4 text-[#C9A84C]" style="animation-delay:0.3s;"></p>
+    <h1 id="hero-title" class="font-display hero-stagger text-5xl md:text-8xl leading-[1.05] mb-3" style="animation-delay:0.5s;"></h1>
+    <div class="w-16 h-[1px] mb-6 hero-stagger" style="background:var(--accent);animation-delay:0.7s;"></div>
+    <p id="hero-subtitle" class="hero-stagger text-sm max-w-lg mb-10" style="animation-delay:0.7s;line-height:1.9;"></p>
+    <div class="flex gap-3 flex-wrap hero-stagger" style="animation-delay:0.9s;">
+     <button id="hero-cta" class="px-10 py-3.5 text-[9px] tracking-[0.3em] uppercase font-medium bg-[#C9A84C] text-[#080808] transition-all hover:opacity-90"></button>
+     <button id="hero-cta2" class="px-10 py-3.5 text-[9px] tracking-[0.3em] uppercase font-medium gold-border transition-all"></button>
+    </div>
+   </div>
+  </section>
 
-      <div class="relative z-10 w-full max-w-[1600px] mx-auto px-5 md:px-10 pb-20 md:pb-28 text-white">
-        <div class="max-w-4xl reveal">
-          <div class="flex items-center gap-4 mb-7">
-            <span class="gold-line"></span>
-            <span id="heroEyebrow" class="text-[9px] uppercase tracking-[.4em] text-white/80">
-              Private Collection / 2026
-            </span>
-          </div>
+  <!-- MARQUEE -->
+  <div class="w-full py-4 overflow-hidden" style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+   <div class="marquee-track whitespace-nowrap flex w-max" style="direction:ltr;">
+    <span id="marquee-text" class="inline-block flex-shrink-0 whitespace-nowrap text-[9px] tracking-[0.5em] uppercase px-8"></span>
+    <span id="marquee-text-dup" class="inline-block flex-shrink-0 whitespace-nowrap text-[9px] tracking-[0.5em] uppercase px-8" style="color:var(--text-muted);"></span>
+   </div>
+  </div>
 
-          <h1 id="heroTitle"
-            class="display hero-title text-[6.5rem] md:text-[11rem] leading-[.72] tracking-[-.035em] font-light">
-            The New<br>Objects
-          </h1>
+  <!-- CATEGORIES -->
+  <section class="py-12 md:py-16 sr">
+   <div class="px-6 md:px-16 max-w-[1440px] mx-auto mb-10">
+    <p id="cat-eyebrow" class="text-[9px] tracking-[0.5em] uppercase mb-2 text-[#C9A84C]"></p>
+    <h2 id="cat-heading" class="font-display text-3xl md:text-5xl"></h2>
+   </div>
+   <div id="cat-rail" class="flex gap-6 px-6 md:px-16 overflow-x-auto hide-scrollbar cursor-grab"></div>
+  </section>
+  <div class="section-div max-w-[1440px] mx-auto"></div>
 
-          <p id="heroText"
-            class="mt-8 max-w-xl text-sm md:text-base leading-7 text-white/80">
-            A considered collection of objects, crafted for those who notice the details.
-          </p>
+  <!-- FEATURED / PRODUCTS -->
+  <section class="py-12 md:py-16 sr" style="background:var(--bg-secondary);">
+   <div class="px-6 md:px-16 max-w-[1440px] mx-auto mb-10 flex items-end justify-between">
+    <div>
+     <p id="featured-eyebrow" class="text-[9px] tracking-[0.5em] uppercase mb-2 text-[#C9A84C]"></p>
+     <h2 id="featured-heading" class="font-display text-2xl md:text-4xl"></h2>
+    </div>
+   </div>
+   <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-6 md:px-16 max-w-[1440px] mx-auto"></div>
+  </section>
 
-          <div class="flex flex-wrap gap-3 mt-9">
-            <a href="#featured"
-              class="luxury-button border border-white/60 px-7 py-4 text-[10px] uppercase tracking-[.25em]">
-              Shop Now
-            </a>
+  <!-- NEWSLETTER -->
+  <section class="py-16 md:py-20 sr text-center" style="background:var(--bg-tertiary);">
+   <div class="max-w-xl mx-auto px-6">
+    <h2 id="newsletter-heading" class="font-display text-2xl md:text-3xl mb-4"></h2>
+    <p id="newsletter-sub" class="text-sm mb-10 text-[var(--text-secondary)]"></p>
+    <form id="newsletter-form" class="flex gap-2" onsubmit="event.preventDefault(); alert('تم الانضمام بنجاح.');">
+     <input type="email" id="newsletter-input" class="flex-1 px-5 py-3.5 text-sm gold-border bg-transparent outline-none" placeholder="البريد الإلكتروني..." required style="color:var(--text-primary);">
+     <button type="submit" id="newsletter-btn" class="px-6 py-3.5 text-[9px] tracking-[0.25em] uppercase font-medium bg-[#C9A84C] text-[#080808]">انضمام</button>
+    </form>
+   </div>
+  </section>
 
-            <a href="#editorial"
-              class="px-7 py-4 text-[10px] uppercase tracking-[.25em] border border-white/20 bg-white/10 backdrop-blur-sm hover:bg-white hover:text-black transition">
-              Discover
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
+  <!-- FOOTER -->
+  <footer class="py-20" style="border-top:1px solid var(--border);">
+   <div class="max-w-[1440px] mx-auto px-6 md:px-16 grid md:grid-cols-4 gap-12">
+    <div>
+     <p id="footer-brand" class="font-display text-base tracking-[0.5em] uppercase mb-5" style="color:var(--accent);">LUXE</p>
+     <p id="footer-desc" class="text-xs leading-[1.9] text-[var(--text-secondary)]"></p>
+    </div>
+    <div>
+     <p id="footer-col2-title" class="text-[9px] tracking-[0.3em] uppercase font-medium mb-5 text-[#C9A84C]">الأقسام</p>
+     <div id="footer-categories" class="flex flex-col gap-2.5 text-xs text-[var(--text-muted)]"></div>
+    </div>
+    <div>
+     <p id="footer-col3-title" class="text-[9px] tracking-[0.3em] uppercase font-medium mb-5 text-[#C9A84C]">خدمة العملاء</p>
+     <div class="flex flex-col gap-2.5 text-xs text-[var(--text-muted)]">
+      <span class="cursor-pointer hover:underline">من نحن</span>
+      <span class="cursor-pointer hover:underline">تواصل معنا</span>
+      <span class="cursor-pointer hover:underline">سياسة الشحن</span>
+     </div>
+    </div>
+    <div>
+     <p id="footer-col4-title" class="text-[9px] tracking-[0.3em] uppercase font-medium mb-5 text-[#C9A84C]">تواصل واتساب</p>
+     <p id="footer-whatsapp" class="text-xs text-[var(--text-secondary)]"></p>
+    </div>
+   </div>
+   <div class="max-w-[1440px] mx-auto px-6 md:px-16 mt-14 pt-6 text-center border-t" style="border-color:var(--border);">
+    <p id="footer-copy" onclick="openAdminPanel()" class="text-[8px] tracking-[0.4em] uppercase cursor-pointer select-none text-[var(--text-muted)]">جميع الحقوق محفوظة © 2026 LUXE</p>
+   </div>
+  </footer>
 
-    <!-- MARQUEE -->
-    <section class="border-b border-theme overflow-hidden py-5">
-      <div class="marquee">
-        <div class="flex items-center gap-10 px-5 whitespace-nowrap text-[9px] uppercase tracking-[.42em]">
-          <span>New Collection</span><span>✦</span>
-          <span>Luxury Essentials</span><span>✦</span>
-          <span>Curated For You</span><span>✦</span>
-          <span>WhatsApp Orders</span><span>✦</span>
-          <span>New Arrivals</span><span>✦</span>
-          <span>Private Selection</span><span>✦</span>
-        </div>
+  <!-- CART DRAWER -->
+  <div id="cart-drawer" class="fixed inset-0 z-[100] pointer-events-none hidden">
+   <div id="cart-overlay" onclick="toggleCartDrawer()" class="absolute inset-0 bg-black/70 opacity-0 drawer-overlay pointer-events-auto"></div>
+   <aside id="cart-panel" class="absolute top-0 end-0 h-full w-full max-w-sm pointer-events-auto drawer-panel flex flex-col shadow-2xl" style="background:var(--bg-primary);transform:translateX(100%);border-inline-start:1px solid var(--border);">
+    <div class="flex items-center justify-between p-5 border-b" style="border-color:var(--border);">
+     <h3 id="cart-title" class="font-display text-base">حقيبة التسوق</h3>
+     <button onclick="toggleCartDrawer()" aria-label="Close"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <div id="cart-items" class="flex-1 overflow-y-auto p-5 space-y-4"></div>
+    <div class="p-5 border-t" style="border-color:var(--border);">
+     <div class="mb-3 flex items-center gap-2">
+      <input type="text" id="coupon-input" placeholder="كود الخصم (Coupon)" class="admin-input flex-1">
+      <button onclick="applyCoupon()" class="admin-btn">تطبيق</button>
+     </div>
+     <div class="flex justify-between mb-4 font-bold text-sm">
+      <span id="cart-total-label">الإجمالي:</span>
+      <span id="cart-total-price" class="text-[#C9A84C]">$0</span>
+     </div>
+     <button onclick="checkoutWhatsApp()" class="w-full py-3.5 bg-[#C9A84C] text-[#080808] text-[10px] tracking-[0.25em] uppercase font-bold text-center">إتمام الطلب عبر واتساب</button>
+    </div>
+   </aside>
+  </div>
 
-        <div class="flex items-center gap-10 px-5 whitespace-nowrap text-[9px] uppercase tracking-[.42em]">
-          <span>New Collection</span><span>✦</span>
-          <span>Luxury Essentials</span><span>✦</span>
-          <span>Curated For You</span><span>✦</span>
-          <span>WhatsApp Orders</span><span>✦</span>
-          <span>New Arrivals</span><span>✦</span>
-          <span>Private Selection</span><span>✦</span>
-        </div>
-      </div>
-    </section>
+  <!-- FAVORITES DRAWER -->
+  <div id="fav-drawer" class="fixed inset-0 z-[100] pointer-events-none hidden">
+   <div id="fav-overlay" onclick="toggleFavDrawer()" class="absolute inset-0 bg-black/70 pointer-events-auto"></div>
+   <aside id="fav-panel" class="absolute top-0 start-0 h-full w-full max-w-sm pointer-events-auto drawer-panel flex flex-col shadow-2xl" style="background:var(--bg-primary);transform:translateX(-100%);border-inline-end:1px solid var(--border);">
+    <div class="flex items-center justify-between p-5 border-b" style="border-color:var(--border);">
+     <h3 id="fav-title" class="font-display text-base">المفضلة</h3>
+     <button onclick="toggleFavDrawer()" aria-label="Close"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <div id="fav-items" class="flex-1 overflow-y-auto p-5 space-y-4"></div>
+   </aside>
+  </div>
 
-    <!-- COLLECTIONS -->
-    <section id="collections" class="max-w-[1600px] mx-auto px-5 md:px-10 py-24 md:py-36">
-      <div class="flex items-end justify-between mb-12 reveal">
-        <div>
-          <div class="text-[9px] uppercase tracking-[.4em] muted mb-4">01 / Collections</div>
-          <h2 class="display text-5xl md:text-7xl font-light">Objects of Desire</h2>
-        </div>
-        <div class="hidden md:block max-w-xs text-xs leading-6 muted">
-          Carefully selected categories, each with its own character.
-        </div>
-      </div>
+  <!-- SEARCH MODAL -->
+  <div id="search-modal" class="fixed inset-0 z-[150] bg-black/95 hidden flex flex-col p-6 md:p-16">
+   <div class="max-w-3xl mx-auto w-full">
+    <div class="flex justify-between items-center mb-10 border-b pb-4" style="border-color:var(--accent);">
+     <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="ابحث عن منتج..." class="w-full bg-transparent text-xl md:text-3xl outline-none border-none text-[var(--text-primary)]">
+     <button onclick="closeSearchModal()" class="text-2xl text-[var(--text-primary)]">✕</button>
+    </div>
+    <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto"></div>
+   </div>
+  </div>
 
-      <div id="categoriesRail"
-        class="horizontal-rail gap-3 md:gap-5 pb-4 reveal">
-      </div>
-    </section>
+  <!-- ADMIN PANEL (FULL CATEGORY-BASED REVIEWS & MANAGEMENT) -->
+  <div id="admin-panel" class="admin-overlay">
+   <div class="max-w-6xl mx-auto p-6 md:p-12">
+    <div class="flex justify-between items-center pb-6 mb-8 border-b" style="border-color:var(--border);">
+     <div class="flex items-center gap-3">
+      <i data-lucide="settings" class="w-6 h-6 text-[#C9A84C]"></i>
+      <h2 class="font-display text-2xl text-[#C9A84C]">لوحة التحكم المتقدمة (Admin Panel)</h2>
+     </div>
+     <button onclick="closeAdminPanel()" class="admin-btn admin-btn-outline">إغلاق لوحة التحكم</button>
+    </div>
 
-    <!-- SELECTED PRODUCTS -->
-    <section id="featured" class="surface py-24 md:py-32">
-      <div class="max-w-[1600px] mx-auto px-5 md:px-10">
-        <div class="flex items-end justify-between mb-12 reveal">
-          <div>
-            <div class="text-[9px] uppercase tracking-[.4em] muted mb-4">02 / Selected</div>
-            <h2 class="display text-5xl md:text-7xl font-light">The Selection</h2>
-          </div>
+    <!-- Admin Tabs -->
+    <div class="flex gap-2 overflow-x-auto mb-8 border-b" style="border-color:var(--border);">
+     <button class="admin-tab active" onclick="switchAdminTab('products', this)">إدارة المنتجات</button>
+     <button class="admin-tab" onclick="switchAdminTab('categories', this)">الأقسام</button>
+     <button class="admin-tab" onclick="switchAdminTab('orders', this)">طلبات الزوار والعملاء</button>
+     <button class="admin-tab" onclick="switchAdminTab('analytics', this)">التحليلات والإيرادات</button>
+     <button class="admin-tab" onclick="switchAdminTab('coupons', this)">الكوبونات</button>
+     <button class="admin-tab" onclick="switchAdminTab('settings', this)">إعدادات المتجر</button>
+     <button class="admin-tab" onclick="switchAdminTab('data', this)">البيانات (استيراد/تصدير)</button>
+    </div>
 
-          <button onclick="openSearch()"
-            class="hidden md:block text-[9px] uppercase tracking-[.3em] border-b border-current pb-2">
-            Explore all
-          </button>
-        </div>
+    <!-- TAB 1: PRODUCTS (Organized by Category) -->
+    <div id="tab-products" class="admin-tab-content">
+     <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xs tracking-widest uppercase text-[#C9A84C] font-bold">المنتجات حسب الأقسام</h3>
+      <button onclick="openProductModal()" class="admin-btn">+ إضافة منتج جديد</button>
+     </div>
+     <div id="admin-products-container" class="space-y-6"></div>
+    </div>
 
-        <div id="featuredGrid"
-          class="grid grid-cols-2 lg:grid-cols-4 gap-x-3 md:gap-x-5 gap-y-12 reveal">
-        </div>
-      </div>
-    </section>
+    <!-- TAB 2: CATEGORIES -->
+    <div id="tab-categories" class="admin-tab-content hidden">
+     <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xs tracking-widest uppercase text-[#C9A84C] font-bold">إدارة الأقسام</h3>
+      <button onclick="addCategoryPrompt()" class="admin-btn">+ إضافة قسم جديد</button>
+     </div>
+     <div id="admin-categories-list" class="space-y-3"></div>
+    </div>
 
-    <!-- EDITORIAL -->
-    <section id="editorial" class="max-w-[1600px] mx-auto px-5 md:px-10 py-24 md:py-40">
-      <div class="grid lg:grid-cols-12 gap-5 items-center">
-
-        <div class="lg:col-span-7 relative reveal">
-          <div class="aspect-[4/5] md:aspect-[5/4] overflow-hidden">
-            <img
-              src="https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=1500&q=85"
-              class="w-full h-full object-cover hover:scale-[1.025] transition duration-[1.4s]"
-              alt="Editorial"
-              loading="lazy"
-            />
-          </div>
-
-          <div class="absolute bottom-5 right-5 bg-white/90 text-black px-5 py-4 backdrop-blur-md">
-            <div class="text-[8px] uppercase tracking-[.35em]">LUXE / EDITORIAL</div>
-          </div>
-        </div>
-
-        <div class="lg:col-span-5 lg:pr-16 reveal">
-          <div class="text-[9px] uppercase tracking-[.4em] muted mb-6">Editorial / 01</div>
-
-          <h2 class="display text-6xl md:text-8xl leading-[.82] font-light">
-            The<br>Objects
-          </h2>
-
-          <div class="gold-line my-8"></div>
-
-          <p class="text-sm leading-7 muted max-w-md">
-            Luxury is rarely loud. It lives in proportion, texture,
-            weight and the small details that reveal themselves over time.
-          </p>
-
-          <a href="#new"
-            class="inline-block mt-9 text-[9px] uppercase tracking-[.3em] border-b border-current pb-2">
-            Explore the story
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- NEW SEASON -->
-    <section id="new" class="surface py-24 md:py-32">
-      <div class="max-w-[1600px] mx-auto px-5 md:px-10">
-        <div class="grid md:grid-cols-12 gap-8 items-end mb-14 reveal">
-          <div class="md:col-span-7">
-            <div class="text-[9px] uppercase tracking-[.4em] muted mb-4">03 / New Season</div>
-            <h2 class="display text-6xl md:text-8xl font-light leading-[.8]">
-              The New<br>Season
-            </h2>
-          </div>
-          <p class="md:col-span-4 text-xs leading-7 muted">
-            A refined edit of newly arrived pieces designed to move effortlessly
-            from day to evening.
-          </p>
-        </div>
-
-        <div id="newRail"
-          class="horizontal-rail gap-4 pb-4 reveal">
-        </div>
-      </div>
-    </section>
-
-    <!-- BIG IMAGE -->
-    <section class="relative h-[72vh] md:h-[90vh] overflow-hidden">
-      <img
-        src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=2200&q=90"
-        class="absolute inset-0 w-full h-full object-cover hover:scale-[1.035] transition duration-[1.8s]"
-        alt="Luxury Fashion"
-        loading="lazy"
-      />
-      <div class="absolute inset-0 bg-black/25"></div>
-
-      <div class="relative z-10 h-full max-w-[1600px] mx-auto px-5 md:px-10 flex items-center">
-        <div class="text-white max-w-xl reveal">
-          <div class="text-[9px] uppercase tracking-[.45em] text-white/70 mb-7">
-            A point of view
-          </div>
-
-          <h2 class="display text-7xl md:text-[10rem] leading-[.75]">
-            Less.<br>Better.
-          </h2>
-
-          <p class="mt-8 text-sm text-white/75 leading-7 max-w-sm">
-            Objects chosen for their ability to become part of your everyday ritual.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- OFFERS -->
-    <section id="offers" class="max-w-[1600px] mx-auto px-5 md:px-10 py-24 md:py-36">
-      <div class="grid md:grid-cols-12 gap-8 items-end mb-12 reveal">
-        <div class="md:col-span-8">
-          <div class="text-[9px] uppercase tracking-[.4em] muted mb-4">04 / Private Offers</div>
-          <h2 class="display text-6xl md:text-8xl font-light">Rare Finds</h2>
-        </div>
-        <p class="md:col-span-4 text-xs leading-7 muted">
-          Selected pieces, special pricing, limited quantities.
-        </p>
-      </div>
-
-      <div id="offersGrid"
-        class="grid grid-cols-2 lg:grid-cols-4 gap-x-3 md:gap-x-5 gap-y-12 reveal">
-      </div>
-    </section>
-
-    <!-- EDITORIAL 2 -->
-    <section class="surface">
-      <div class="max-w-[1600px] mx-auto grid md:grid-cols-2">
-        <div class="p-8 md:p-16 lg:p-24 flex flex-col justify-center">
-          <div class="text-[9px] uppercase tracking-[.4em] muted mb-6">
-            Editorial / 02
-          </div>
-
-          <h2 class="display text-6xl md:text-8xl leading-[.78]">
-            Details<br>Matter.
-          </h2>
-
-          <div class="gold-line my-8"></div>
-
-          <p class="text-sm leading-7 muted max-w-md">
-            From the gleam of a metal edge to the texture of fine leather,
-            every object in LUXE is selected with intention.
-          </p>
-        </div>
-
-        <div class="min-h-[600px] overflow-hidden">
-          <img
-       
+    <!-- TAB 3: ORDERS (Category-based Review & Confirmation Workflow) -->
+    <div id="tab-orders" class="admin-tab-content hidden">
+     <h3 class="text-xs tracking-widest uppercase text-[#C9A84C] font-bold mb-4">طلبات الواتساب (مراجعة 
